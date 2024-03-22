@@ -34,6 +34,12 @@ dependencies:
   sensors_plus: ^4.0.2
   three_dart: ^0.0.14
 
+  motion_sensors:
+    git:
+      url: 'git@github.com:lraty-li/motion_sensors.git'
+      ref: '61f4025874c5eb4ad0c22e333caeae9dcc83984c'
+
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6

@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_gl/flutter_gl.dart';
-import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;
-import 'package:sensors_plus/sensors_plus.dart';
+import 'package:motion_sensors/motion_sensors.dart';
 
 // [MagnetometerEvent (x: -23.6, y: 6.2, z: -34.9)]
 class HomeState {
@@ -18,13 +16,12 @@ class HomeState {
   Size? screenSize;
   late three.Scene scene;
   late three.Camera camera;
-  late three.Mesh mesh;
 
   late three.Camera cameraPerspective;
 
-  late three.Group cameraRig;
+  // late three.Group cameraRig;
 
-  late three.Camera activeCamera;
+  // late three.Camera activeCamera;
   late three.CameraHelper activeHelper;
 
   late three.CameraHelper cameraPerspectiveHelper;
@@ -39,13 +36,14 @@ class HomeState {
 
   var amount = 4;
 
-  bool verbose = true;
+  bool verbose = false;
   bool disposed = false;
   late final bool mykisweb;
 
   late three.WebGLRenderTarget renderTarget;
-
   dynamic sourceTexture;
+  three.Vector4 _rotationVector = three.Vector4(0, 0, 0, 0);
+  double accelerometerZ = 0.0;
 
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -65,7 +63,7 @@ class HomeState {
 
     await three3dRender.initialize(options: options);
 
-    mySetstate(() {});
+    mySetstate(() {}); // to bump a frame?
 
     // Wait for web  //? centain time?
     await Future.delayed(const Duration(milliseconds: 1000), () async {
@@ -78,16 +76,30 @@ class HomeState {
   initScene() {
     initRenderer();
     initPage();
-    initgyroscope();
+    initRotationSensor();
   }
 
-  initgyroscope() {
-    gyroscopeEventStream(samplingPeriod: SensorInterval.normalInterval)
-        .listen((event) {
-      //校准？
-      activeCamera.rotateX(event.x);
-      activeCamera.rotateY(event.y);
-      activeCamera.rotateZ(event.z);
+  initRotationSensor() {
+    motionSensors.rotationVectorUpdateInterval =
+        Duration.microsecondsPerSecond ~/ 60; //TODO changeable fps?
+    // 把轴向 “竖起来”，比较符合使用手机的直觉操作?
+    //pitch检测的是地面屏幕跟屏幕屏幕的角度，无法区分相对 手机屏幕垂直地面时，是仰视还是俯视（角度值一样），配合加速计判断（要是直接得到旋转矢量可能还好）
+    // motionSensors.orientation.listen((OrientationEvent event) {
+    motionSensors.rotationVector.listen((RotationVectorEvent event) {
+      _rotationVector.set(event.x, event.y, event.z, event.cosTheta);
+
+      // var newPitch = event.pitch - Math.pi / 2;
+      // var newYaw = event.yaw;
+      // if (accelerometerZ < 0) {
+      //   //https://stackoverflow.com/questions/17747823/android-sensormanager-getorientation-returns-pitch-between-pi-2-and-pi-2
+      //   newPitch = -newPitch;
+      //   newYaw = Math.pi + newYaw;
+      // }
+      //欧拉描述变换顺序问题。会产生锁
+      // cameraPerspective.lookAt(three.Vector3(lookAtX, lookAtY, lookAtZ)); //改包用四元数吧还是
+
+      cameraPerspective.setRotationFromQuaternion(
+          three.Quaternion(event.x, event.y, event.z, event.cosTheta));
       render();
     });
   }
@@ -122,48 +134,52 @@ class HomeState {
   }
 
   initPage() {
-    aspect = width / (height  /2);
+    aspect = width / (height / 2);
 
     scene = three.Scene();
+    // debug
+    var axes = three.AxesHelper(50);
+    scene.add(axes);
+//debug end
 
     //
 
     camera = three.PerspectiveCamera(50, aspect, 1, 10000);
-    camera.position.z = 2500;
+    camera.position.x = 100;
+    camera.position.y = 0;
+    camera.position.z = 0;
+    camera.lookAt(three.Vector3(0, 0, 0));
 
     cameraPerspective = three.PerspectiveCamera(50, aspect, 150, 1000);
 
     cameraPerspectiveHelper = three.CameraHelper(cameraPerspective);
     scene.add(cameraPerspectiveHelper);
 
-    activeCamera = cameraPerspective;
     activeHelper = cameraPerspectiveHelper;
 
     // counteract different front orientation of cameras vs rig
 
-    // cameraPerspective.rotation.y = three.Math.pi;
+    // cameraPerspective.rotation.y = Math.pi;
 
-    cameraRig = three.Group();
+    // cameraRig = three.Group();
 
-    cameraRig.add(cameraPerspective);
+    // cameraRig.add(cameraPerspective);
 
-    scene.add(cameraRig);
+    // scene.add(cameraRig);
 
     //
 
-    mesh = three.Mesh(three.SphereGeometry(100, 16, 8),
-        three.MeshBasicMaterial({"color": 0x31A174, "wireframe": false}));
-    scene.add(mesh);
-
-    var mesh2 = three.Mesh(three.SphereGeometry(50, 16, 8),
+    var mesh2 = three.Mesh(three.SphereGeometry(5, 16, 8),
         three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
-    mesh2.position.y = 150;
-    mesh.add(mesh2);
+    mesh2.position.x = 10;
+    mesh2.position.z = 0;
+    // scene.add(mesh2);
 
     var mesh3 = three.Mesh(three.SphereGeometry(5, 16, 8),
         three.MeshBasicMaterial({"color": 0x31A174, "wireframe": false}));
-    mesh3.position.z = 150;
-    // cameraRig.add(mesh3);
+    mesh3.position.x = 0;
+    mesh3.position.z = 10;
+    // scene.add(scene);
 
     //
 
@@ -182,7 +198,6 @@ class HomeState {
     var particles = three.Points(
         geometry, three.PointsMaterial({"color": 0x888888, "size": 5}));
     scene.add(particles);
-    render();
   }
 
   render() {
@@ -192,16 +207,12 @@ class HomeState {
 
     renderer!.clear();
 
-    activeHelper.visible = false;
-
-    renderer!.setViewport(0, 0, width, height / 2);
-    renderer!.render(scene, activeCamera);
-
-    activeHelper.visible = true;
-
     renderer!.setViewport(0, height / 2, width, height / 2);
     renderer!.render(scene, camera);
 
+    // 注意：实际效果该viewport在手机屏幕下半部分
+    renderer!.setViewport(0, 0, width, height / 2);
+    renderer!.render(scene, cameraPerspective);
     int t1 = DateTime.now().millisecondsSinceEpoch;
 
     if (verbose) {

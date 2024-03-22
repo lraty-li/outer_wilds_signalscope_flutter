@@ -273,6 +273,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.11.0"
+  motion_sensors:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "61f4025874c5eb4ad0c22e333caeae9dcc83984c"
+      resolved-ref: "61f4025874c5eb4ad0c22e333caeae9dcc83984c"
+      url: "git@github.com:lraty-li/motion_sensors.git"
+    source: git
+    version: "0.1.0"
   path:
     dependency: transitive
     description:
