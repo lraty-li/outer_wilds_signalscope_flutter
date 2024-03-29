@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gl/flutter_gl.dart';
+import 'package:outerwilds_signalscope/models/planet.dart';
+import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
 import 'package:three_dart/three_dart.dart' as three;
 import 'package:motion_sensors/motion_sensors.dart';
 
@@ -16,12 +20,9 @@ class HomeState {
   Size? screenSize;
   late three.Scene scene;
   late three.Camera camera;
-
+  //TODO shrink the useless code
   late three.Camera cameraPerspective;
 
-  // late three.Group cameraRig;
-
-  // late three.Camera activeCamera;
   late three.CameraHelper activeHelper;
 
   late three.CameraHelper cameraPerspectiveHelper;
@@ -45,9 +46,15 @@ class HomeState {
   three.Vector4 _rotationVector = three.Vector4(0, 0, 0, 0);
   double accelerometerZ = 0.0;
 
+  //indicator
+  List<Planet> planets = [];
+  List<double> indicatorFactors = List.filled(11, 0);
+
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
+
+
     width = screenSize!.width;
     height = screenSize!.height;
 
@@ -100,7 +107,7 @@ class HomeState {
 
       cameraPerspective.setRotationFromQuaternion(
           three.Quaternion(event.x, event.y, event.z, event.cosTheta));
-      render();
+      // render();
     });
   }
 
