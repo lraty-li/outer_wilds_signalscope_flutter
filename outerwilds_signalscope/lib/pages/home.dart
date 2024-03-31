@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:outerwilds_signalscope/models/planet.dart';
 import 'package:outerwilds_signalscope/view_model/home_state.dart';
+import 'package:outerwilds_signalscope/view_model/planet_view.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -35,53 +37,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _build(BuildContext context) {
-    var width = homestate.width;
-    var height = homestate.height;
-    var three3dRender = homestate.three3dRender;
-
-    //testing code
-    var indicatorFactors = homestate.indicatorFactors;
-    for (var index = 0; index < indicatorFactors.length; index += 1) {
-      indicatorFactors[index] = index / 10;
-    }
-    //testing code end
-
     return Stack(
       children: [
-        // Container(
-        //     width: width,
-        //     height: height,
-        //     color: Colors.black,
-        //     child: Builder(builder: (BuildContext context) {
-        //       if (kIsWeb) {
-        //         return three3dRender.isInitialized
-        //             ? HtmlElementView(
-        //                 viewType: three3dRender.textureId!.toString())
-        //             : const CircularProgressIndicator();
-        //       } else {
-        //         return three3dRender.isInitialized
-        //             ? Texture(textureId: three3dRender.textureId!)
-        //             : const CircularProgressIndicator();
-        //       }
-        //     })),
-        ..._buildIndicators(homestate)
+        _build3dView(homestate),
+        ..._buildIndicators(homestate),
       ],
     );
   }
 
   List<SignalCircleIndicator> _buildIndicators(HomeState state) {
     {
-      List<double> indicatorsData = homestate.indicatorFactors;
+      List<PlanetVm> planets = homestate.planets;
       List<SignalCircleIndicator> indicators = [];
-      for (var i = 0; i < indicatorsData.length; i++) {
+      for (var i = 0; i < planets.length; i++) {
+        //TODO 判断是否需要绘制
         indicators.add(SignalCircleIndicator(
-          arcCtlFactor: indicatorsData[i],
-          arcLengthFactor:  .2,
-          arcColor: Colors.black,
+          arcCtlFactor: planets[i].indicatorFactor,
+          arcLengthFactor: .2,
+          arcColor: Colors.red,
+          // arcColor: Color(planets[i].color),
         ));
       }
       return indicators;
     }
+  }
+
+  Widget _build3dView(HomeState homestate) {
+    var width = homestate.width;
+    var height = homestate.height;
+    var three3dRender = homestate.three3dRender;
+    return Container(
+        width: width,
+        height: height,
+        color: Colors.black,
+        child: Builder(builder: (BuildContext context) {
+          if (kIsWeb) {
+            return three3dRender.isInitialized
+                ? HtmlElementView(viewType: three3dRender.textureId!.toString())
+                : const CircularProgressIndicator();
+          } else {
+            return three3dRender.isInitialized
+                ? Texture(textureId: three3dRender.textureId!)
+                : const CircularProgressIndicator();
+          }
+        }));
   }
 
   _initSize(BuildContext context, HomeState state) async {
@@ -97,18 +96,6 @@ class _HomePageState extends State<HomePage> {
 
     state.mykisweb = kIsWeb;
     await state.initPlatformState();
-  }
-
-  animate() {
-    if (!mounted || disposed) {
-      return;
-    }
-
-    homestate.render();
-
-    Future.delayed(const Duration(milliseconds: 40), () {
-      animate();
-    });
   }
 
   @override

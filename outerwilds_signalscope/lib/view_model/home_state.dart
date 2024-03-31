@@ -3,8 +3,12 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gl/flutter_gl.dart';
+import 'package:outerwilds_signalscope/constant/planets_data.dart';
+import 'package:outerwilds_signalscope/models/location.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
+import 'package:outerwilds_signalscope/view_model/planet_view.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
+import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;
 import 'package:motion_sensors/motion_sensors.dart';
 
@@ -46,15 +50,15 @@ class HomeState {
   three.Vector4 _rotationVector = three.Vector4(0, 0, 0, 0);
   double accelerometerZ = 0.0;
 
-  //indicator
-  List<Planet> planets = [];
-  List<double> indicatorFactors = List.filled(11, 0);
+  int timeStart = 0;
+  int timeEnd = 1;
+
+  // Planet , indicatorFactor
+  List<PlanetVm> planets = [];
 
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-
-
     width = screenSize!.width;
     height = screenSize!.height;
 
@@ -81,9 +85,42 @@ class HomeState {
   }
 
   initScene() {
+    initPlanet();
     initRenderer();
     initPage();
     initRotationSensor();
+  }
+
+  initPlanet() {
+    planets.clear();
+    final allPlanetsData = planetsData;
+    //TODO debug use
+    for (var i = 0; i < 1; i++) {
+      // for (var i = 0; i < allPlanetsData.length; i++) {
+      final planetData = allPlanetsData[i];
+      planets.add(PlanetVm(
+          planet: Planet(
+            name: planetData.name,
+            radius: planetData.radius,
+            orbitalRadius: planetData.orbitalRadius,
+            location: Location(
+              planetData.location.x,
+              planetData.location.y,
+              planetData.location.z,
+            ),
+          ),
+          color: planetData.color,
+          indicatorFactor: 1));
+    }
+    //TODO factor 与摄像机朝向有关
+    //debug init
+    for (var i = 0; i < planets.length; i++) {
+      final angle = pi;
+      final orbitalRadius = planets[i].planet.orbitalRadius;
+      planets[i].planet.location =
+          Location(cos(angle) * orbitalRadius, sin(angle) * orbitalRadius, 0);
+    }
+    // debug end
   }
 
   initRotationSensor() {
@@ -107,7 +144,7 @@ class HomeState {
 
       cameraPerspective.setRotationFromQuaternion(
           three.Quaternion(event.x, event.y, event.z, event.cosTheta));
-      // render();
+      render();
     });
   }
 
@@ -145,19 +182,19 @@ class HomeState {
 
     scene = three.Scene();
     // debug
-    var axes = three.AxesHelper(50);
+    var axes = three.AxesHelper(500);
     scene.add(axes);
 //debug end
 
     //
 
-    camera = three.PerspectiveCamera(50, aspect, 1, 10000);
-    camera.position.x = 100;
-    camera.position.y = 0;
-    camera.position.z = 0;
+    camera = three.PerspectiveCamera(50, aspect, 1, 25000);
+    camera.position.x = 500;
+    camera.position.y = 500;
+    camera.position.z = 500;
     camera.lookAt(three.Vector3(0, 0, 0));
 
-    cameraPerspective = three.PerspectiveCamera(50, aspect, 150, 1000);
+    cameraPerspective = three.PerspectiveCamera(50, aspect, 1, 25000);
 
     cameraPerspectiveHelper = three.CameraHelper(cameraPerspective);
     scene.add(cameraPerspectiveHelper);
@@ -176,17 +213,19 @@ class HomeState {
 
     //
 
-    var mesh2 = three.Mesh(three.SphereGeometry(5, 16, 8),
+    var mesh2 = three.Mesh(three.SphereGeometry(150, 16, 8),
         three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
-    mesh2.position.x = 10;
+    mesh2.position.y = 250;
+    mesh2.position.x = 250;
     mesh2.position.z = 0;
-    // scene.add(mesh2);
 
-    var mesh3 = three.Mesh(three.SphereGeometry(5, 16, 8),
-        three.MeshBasicMaterial({"color": 0x31A174, "wireframe": false}));
-    mesh3.position.x = 0;
-    mesh3.position.z = 10;
-    // scene.add(scene);
+    var mesh3 = three.Mesh(three.SphereGeometry(100, 16, 8),
+        three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
+    mesh3.position.y = -250;
+    mesh3.position.x = -250;
+    mesh3.position.z = 0;
+    // scene.add(mesh2);
+    // scene.add(mesh3);
 
     //
 
@@ -205,9 +244,63 @@ class HomeState {
     var particles = three.Points(
         geometry, three.PointsMaterial({"color": 0x888888, "size": 5}));
     scene.add(particles);
+
+    // add planets
+    // for (var planet in planets) {
+    //   var mesh = three.Mesh(three.SphereGeometry(planet.radius, 16, 8),
+    //       three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
+    //   scene.add(mesh);
+    // }
+    for (var i = 0; i < planets.length; i++) {
+      var planet = planets[i].planet;
+      var color = planets[i].color;
+      var mesh = three.Mesh(
+          three.SphereGeometry(planet.radius, 16, 8),
+          //TODO 外星站是隐身的
+          three.MeshBasicMaterial({
+            "color": color, // texture?
+            "wireframe": false
+          }));
+      mesh.position.x = planet.location.x * 0.5;
+      mesh.position.y = planet.location.y * 0.5;
+      mesh.position.z = planet.location.z * 0.5;
+      mesh.position;
+      scene.add(mesh);
+    }
   }
 
   render() {
+    //update planets
+    //https://stackoverflow.com/questions/46316372/threejs-check-if-object-is-in-center-of-camera
+    var displayIndicators = [];
+    var cameraDirection = Vector3();
+    var tempVector3 = Vector3(0, 0, 0);
+    for (var i = 0; i < planets.length; i++) {
+      var planet = planets[i].planet;
+      tempVector3.x = planet.location.x;
+      tempVector3.y = planet.location.y;
+      tempVector3.z = planet.location.z;
+      // 用摄像机向量区分是面向屏幕还是背向屏幕
+      cameraPerspective.getWorldDirection(cameraDirection);
+      // 1:
+      // var angleTo = cameraDirection.angleTo(tempVector3);
+      // if(angleTo < pi/2){
+      //   var indicator = angleTo/pi;
+      // }
+
+      //2:
+      var cosine = cameraDirection.dot(tempVector3) /
+          (cameraDirection.length() * tempVector3.length());
+      //在180度内
+      if (cosine > 0) {
+        var positionScreenSpace = tempVector3.project(cameraPerspective);
+        positionScreenSpace.setZ(0);
+        //distance 与屏幕的比例？
+        // print(positionScreenSpace.length());
+        planets[i].indicatorFactor = cosine;
+      }
+    }
+
     int t = DateTime.now().millisecondsSinceEpoch;
 
     final gl = three3dRender.gl;
