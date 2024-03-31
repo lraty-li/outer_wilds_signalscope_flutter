@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/models/location.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'planets_list.g.dart';
 
 class PlanetVm {
   PlanetVm(
@@ -11,7 +14,8 @@ class PlanetVm {
   int color;
 }
 
-class PlanetList extends Notifier<List<Planet>> {
+@riverpod
+class PlanetList extends _$PlanetList {
   @override
   List<Planet> build() {
     final allPlanetsData = planetsData;

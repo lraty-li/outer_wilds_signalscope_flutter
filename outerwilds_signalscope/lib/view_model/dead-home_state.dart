@@ -6,14 +6,16 @@ import 'package:flutter_gl/flutter_gl.dart';
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/models/location.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
-import 'package:outerwilds_signalscope/view_model/planet_list.dart';
+import 'package:outerwilds_signalscope/view_model/planets_list.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;
 import 'package:motion_sensors/motion_sensors.dart';
 
 // [MagnetometerEvent (x: -23.6, y: 6.2, z: -34.9)]
-class HomeState {
+
+class HomeState extends Notifier<HomeState> {
   late FlutterGlPlugin three3dRender;
   three.WebGLRenderer? renderer;
 
@@ -56,11 +58,20 @@ class HomeState {
   // Planet , indicatorFactor
   List<PlanetVm> planets = [];
 
+  bool renderInitialized = false;
+
+  @override
+  HomeState build(){
+    return HomeState();
+  }
+
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    width = screenSize!.width;
-    height = screenSize!.height;
+  Future<void> initPlatformState(Size size, double devicePixelRatio) async {
+    
+    width = size.width;
+    height = size.height;
+    dpr = devicePixelRatio;
 
     three3dRender = FlutterGlPlugin();
 
@@ -74,7 +85,8 @@ class HomeState {
 
     await three3dRender.initialize(options: options);
 
-    mySetstate(() {}); // to bump a frame?
+    // mySetstate(() {}); // to bump a frame?
+    renderInitialized = true;
 
     // Wait for web  //? centain time?
     await Future.delayed(const Duration(milliseconds: 1000), () async {

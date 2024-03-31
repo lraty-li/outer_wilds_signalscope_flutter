@@ -1,34 +1,31 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:outerwilds_signalscope/models/planet.dart';
-import 'package:outerwilds_signalscope/view_model/home_state.dart';
-import 'package:outerwilds_signalscope/view_model/indicator_list.dart';
-import 'package:outerwilds_signalscope/view_model/planet_list.dart';
+import 'package:outerwilds_signalscope/view_model/indicators_provider.dart';
+import 'package:outerwilds_signalscope/view_model/sensor_provider.dart';
+import 'package:outerwilds_signalscope/view_model/threeD_provider.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
 
-
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  bool disposed = false;
-  var homestate = HomeState();
+class HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
+    // "ref" can be used in all life-cycles of a StatefulWidget.
+    // ref.read(counterProvider);
   }
 
   @override
   Widget build(BuildContext context) {
-    _initSize(context, homestate);
+    _initSize(context, ref, setState);
     return MaterialApp(
       home: Scaffold(
-        body: _build(context),
+        body: _build(ref),
         floatingActionButton: ElevatedButton(
           child: Text("set state"),
           onPressed: () {
@@ -39,80 +36,76 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _build(BuildContext context) {
+  Widget _build(WidgetRef ref) {
+    final rotationVector = ref.watch(rotationProvider);
     return Stack(
       children: [
-        _build3dView(homestate),
-        ..._buildIndicators(homestate),
+        _build3dView(ref),
+        ..._buildIndicators(ref),
       ],
     );
   }
 
-
-  List<SignalCircleIndicator> _buildIndicators(HomeState state) {
+  List<Visibility> _buildIndicators(WidgetRef ref) {
     {
-      List<PlanetVm> planets = homestate.planets;
-      List<SignalCircleIndicator> indicators = [];
-      
-      for (var i = 0; i < planets.length; i++) {
+      List<Visibility> indicators = [];
+      var indicatorCount = ref.read(indicatorListProvider).length;
+      for (var index = 0; index < indicatorCount; index++) {
+        var indicatorData = ref.watch(indicatorListProvider)[index];
         //TODO 判断是否需要绘制
-        indicators.add(SignalCircleIndicator(
-          arcCtlFactor: planets[i].indicatorFactor,
-          arcLengthFactor: .2,
-          arcColor: Colors.red,
-          // arcColor: Color(planets[i].color),
-        ));
+        // 参数用到两个位置，会rebuild多少次?
+        var indicatorWidget = Visibility(
+          visible: indicatorData.visiablity,
+          child: SignalCircleIndicator(
+            arcCtlFactor: indicatorData.factor,
+            arcLengthFactor: .2,
+            arcColor: Colors.red,
+            // arcColor: Color(planets[i].color),
+          ),
+        );
+        indicators.add(indicatorWidget);
       }
       return indicators;
     }
   }
 
-  Widget _build3dView(HomeState homestate) {
-    var width = homestate.width;
-    var height = homestate.height;
-    var three3dRender = homestate.three3dRender;
+  Widget _build3dView(WidgetRef ref) {
     return Container(
-        width: width,
-        height: height,
+        width: ref.read(threeDSceneProvider).width,
+        height: ref.read(threeDSceneProvider).height,
         color: Colors.black,
         child: Builder(builder: (BuildContext context) {
-          if (kIsWeb) {
-            return three3dRender.isInitialized
-                ? HtmlElementView(viewType: three3dRender.textureId!.toString())
-                : const CircularProgressIndicator();
-          } else {
-            return three3dRender.isInitialized
-                ? Texture(textureId: three3dRender.textureId!)
-                : const CircularProgressIndicator();
-          }
+          return ref.watch(threeDSceneProvider
+                  .select((state) => state.renderInitialized))
+              ? Texture(
+                  textureId:
+                      ref.read(threeDSceneProvider).three3dRender.textureId!)
+              : const CircularProgressIndicator();
         }));
   }
 
-  _initSize(BuildContext context, HomeState state) async {
-    if (state.screenSize != null) {
+  _initSize(BuildContext context, WidgetRef ref,Function setState) async {
+    ThreeDScene scene = ref.read(threeDSceneProvider);
+    if (scene.screenSize != null) {
       return;
     }
 
-    //TODO need setstate to bump frame?
-    state.mySetstate = setState; //TODO better init
-
     final mqd = MediaQuery.of(context);
 
-    state.screenSize = mqd.size;
-    state.dpr = mqd.devicePixelRatio;
-
-    state.mykisweb = kIsWeb;
-    await state.initPlatformState();
+    await scene.initPlatformState(
+      mqd.size,
+      mqd.devicePixelRatio,
+      setState
+    );
   }
 
-  @override
-  void dispose() {
-    print(" dispose ............. ");
+  // @override
+  // void dispose() {
+  //   print(" dispose ............. ");
 
-    disposed = true;
-    homestate.three3dRender.dispose();
+  //   disposed = true;
+  //   homestate.three3dRender.dispose(); //TODO ref dispose
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 }
-
