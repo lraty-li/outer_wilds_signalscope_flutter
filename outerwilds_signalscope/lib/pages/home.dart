@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
 import 'package:outerwilds_signalscope/view_model/home_state.dart';
-import 'package:outerwilds_signalscope/view_model/planet_view.dart';
+import 'package:outerwilds_signalscope/view_model/indicator_list.dart';
+import 'package:outerwilds_signalscope/view_model/planet_list.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -45,10 +48,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   List<SignalCircleIndicator> _buildIndicators(HomeState state) {
     {
       List<PlanetVm> planets = homestate.planets;
       List<SignalCircleIndicator> indicators = [];
+      
       for (var i = 0; i < planets.length; i++) {
         //TODO 判断是否需要绘制
         indicators.add(SignalCircleIndicator(
@@ -87,6 +92,8 @@ class _HomePageState extends State<HomePage> {
     if (state.screenSize != null) {
       return;
     }
+
+    //TODO need setstate to bump frame?
     state.mySetstate = setState; //TODO better init
 
     final mqd = MediaQuery.of(context);
@@ -108,3 +115,4 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 }
+

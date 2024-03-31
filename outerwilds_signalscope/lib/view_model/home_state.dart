@@ -6,7 +6,7 @@ import 'package:flutter_gl/flutter_gl.dart';
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/models/location.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
-import 'package:outerwilds_signalscope/view_model/planet_view.dart';
+import 'package:outerwilds_signalscope/view_model/planet_list.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
 import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;

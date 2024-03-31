@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/pages/home.dart';
 import 'dart:ui'; //window需要import ui库
 
@@ -23,5 +24,5 @@ void main() {
 }
 
 void _runApp() {
-  runApp(HomePage());
+  runApp(const ProviderScope(child: HomePage()));
 }
