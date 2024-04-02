@@ -9,13 +9,13 @@ import 'package:outerwilds_signalscope/models/planet.dart';
 import 'package:outerwilds_signalscope/view_model/planets_list.dart';
 import 'package:outerwilds_signalscope/view_model/sensor_provider.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
+import 'package:outerwilds_signalscope/widgets/threeD_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;
 import 'package:motion_sensors/motion_sensors.dart';
 part 'threeD_provider.g.dart';
 // [MagnetometerEvent (x: -23.6, y: 6.2, z: -34.9)]
-
 
 @riverpod
 class ThreeDScene extends _$ThreeDScene {
@@ -59,21 +59,24 @@ class ThreeDScene extends _$ThreeDScene {
   List<PlanetVm> planets = [];
 
   bool renderInitialized = false;
-
-  late Function mySetstate;
+  bool sizeInitialized = false;
 
   @override
-  ThreeDScene build() {
-    return ThreeDScene();
+  bool build() {
+    ref.onDispose(() {
+      print("thrre dispose");
+    });
+    //is render ready, TODO split apart?
+    return false;
   }
 
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState(Size size, double devicePixelRatio, Function setState) async {
+  Future<void> initPlatformState(Size size, double devicePixelRatio) async {
+    print("initPlatformState");
     width = size.width;
     height = size.height;
     dpr = devicePixelRatio;
-    mySetstate = setState;
     three3dRender = FlutterGlPlugin();
 
     Map<String, dynamic> options = {
@@ -83,11 +86,11 @@ class ThreeDScene extends _$ThreeDScene {
       "height": height.toInt(),
       "dpr": dpr
     };
+    sizeInitialized = true;
 
     await three3dRender.initialize(options: options);
 
-    // renderInitialized = false;// can't make it
-    mySetstate(() {}); // to bump a frame?
+    renderInitialized = true;
 
     // Wait for web  //? centain time?
     await Future.delayed(const Duration(milliseconds: 1000), () async {
@@ -102,6 +105,8 @@ class ThreeDScene extends _$ThreeDScene {
     initRenderer();
     initPage();
     initRotationSensor();
+    render();
+    state = true;
   }
 
   initPlanet() {
@@ -150,8 +155,6 @@ class ThreeDScene extends _$ThreeDScene {
     //     render();
     //   },
     // );
-    render();
-    // renderInitialized = true;
   }
 
   initRenderer() {
@@ -179,8 +182,6 @@ class ThreeDScene extends _$ThreeDScene {
     renderer!.setRenderTarget(renderTarget);
 
     sourceTexture = renderer!.getRenderTargetGLTexture(renderTarget);
-
-    
   }
 
   initPage() {

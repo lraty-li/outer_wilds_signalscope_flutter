@@ -6,12 +6,12 @@ part of 'threeD_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threeDSceneHash() => r'bc7f78b40072bc1a6c54eeca2ed3ea3d8d2a7c28';
+String _$threeDSceneHash() => r'7fbaa01ddcac69b643f2dcaab17e3fbe78adf0c6';
 
 /// See also [ThreeDScene].
 @ProviderFor(ThreeDScene)
 final threeDSceneProvider =
-    AutoDisposeNotifierProvider<ThreeDScene, ThreeDScene>.internal(
+    AutoDisposeNotifierProvider<ThreeDScene, bool>.internal(
   ThreeDScene.new,
   name: r'threeDSceneProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final threeDSceneProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ThreeDScene = AutoDisposeNotifier<ThreeDScene>;
+typedef _$ThreeDScene = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
