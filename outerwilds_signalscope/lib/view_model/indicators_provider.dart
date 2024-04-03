@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/view_model/planets_list.dart';
-import 'package:outerwilds_signalscope/view_model/threeD_provider.dart';
+import 'package:outerwilds_signalscope/view_model/three_demension_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three3d/math/vector3.dart';
 
@@ -26,8 +25,8 @@ class IndicatorList extends _$IndicatorList {
   void update() {
     //TODO 会更新吗
     final planets = ref.read(planetListProvider);
-    final camera = ref
-        .read(threeDSceneProvider.select((scene) => scene.cameraPerspective));
+    final camera = ref.read(threeDSceneProvider.notifier
+        .select((scene) => scene.cameraPerspective));
     camera.getWorldDirection(cameraDirection);
 
     for (var i = 0; i < planets.length; i++) {

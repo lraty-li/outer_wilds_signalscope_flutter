@@ -8,14 +8,9 @@ import 'package:outerwilds_signalscope/models/location.dart';
 import 'package:outerwilds_signalscope/models/planet.dart';
 import 'package:outerwilds_signalscope/view_model/planets_list.dart';
 import 'package:outerwilds_signalscope/view_model/sensor_provider.dart';
-import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
-import 'package:outerwilds_signalscope/widgets/threeD_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:three_dart/three3d/three.dart';
 import 'package:three_dart/three_dart.dart' as three;
-import 'package:motion_sensors/motion_sensors.dart';
-part 'threeD_provider.g.dart';
-// [MagnetometerEvent (x: -23.6, y: 6.2, z: -34.9)]
+part 'three_demension_provider.g.dart';
 
 @riverpod
 class ThreeDScene extends _$ThreeDScene {
@@ -63,6 +58,7 @@ class ThreeDScene extends _$ThreeDScene {
 
   @override
   bool build() {
+    ref.keepAlive();
     ref.onDispose(() {
       print("thrre dispose");
     });
@@ -100,12 +96,11 @@ class ThreeDScene extends _$ThreeDScene {
     });
   }
 
-  initScene() {
+  initScene() async {
     initPlanet();
     initRenderer();
     initPage();
     initRotationSensor();
-    render();
     state = true;
   }
 
@@ -142,19 +137,22 @@ class ThreeDScene extends _$ThreeDScene {
   }
 
   initRotationSensor() {
-    // final rotationVector = ref.watch(rotationProvider);
-    // rotationVector.when(
-    //   loading: () {},
-    //   error: (error, stack) {},
-    //   data: (rotationVector) {
-    //     cameraPerspective.setRotationFromQuaternion(three.Quaternion(
-    //         rotationVector.x,
-    //         rotationVector.y,
-    //         rotationVector.z,
-    //         rotationVector.cosTheta));
-    //     render();
-    //   },
-    // );
+    ref.listen(rotationProvider, (previous, next) {
+      next.when(
+        loading: () {},
+        error: (error, stack) {},
+        data: (rotationVector) {
+          cameraPerspective.setRotationFromQuaternion(three.Quaternion(
+            rotationVector[0],
+            rotationVector[1],
+            rotationVector[2],
+            rotationVector[3],
+          ));
+          render();
+          print("rotation event");
+        },
+      );
+    });
   }
 
   initRenderer() {

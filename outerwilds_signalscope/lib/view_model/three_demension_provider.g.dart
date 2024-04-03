@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'threeD_provider.dart';
+part of 'three_demension_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threeDSceneHash() => r'7fbaa01ddcac69b643f2dcaab17e3fbe78adf0c6';
+String _$threeDSceneHash() => r'28392ed95d4e8d38a5160db62b86095750e8496e';
 
 /// See also [ThreeDScene].
 @ProviderFor(ThreeDScene)
