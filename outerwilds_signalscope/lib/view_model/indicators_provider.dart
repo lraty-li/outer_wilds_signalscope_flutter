@@ -25,8 +25,8 @@ class IndicatorList extends _$IndicatorList {
   }
 
   initSensor() {
-    ref.watch(rotationProvider).whenData((rotation) {
-      update(rotation);
+    ref.listen(rotationProvider, (previous, next) {
+      next.whenData((rotation) => update(rotation));
     });
   }
 
@@ -35,8 +35,8 @@ class IndicatorList extends _$IndicatorList {
 
   //TODO 加速计，摄像机平移？够不够准确呢
   void update(List<double> rotation) {
-    if (ref.watch(threeDSceneProvider)) {
-      final camera = ref.watch(threeDSceneProvider.notifier).cameraPerspective;
+    if (ref.read(threeDSceneProvider)) {
+      final camera = ref.read(threeDSceneProvider.notifier).cameraPerspective;
 
       camera.getWorldDirection(cameraDirection);
     }
