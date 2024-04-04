@@ -50,9 +50,6 @@ class ThreeDScene extends _$ThreeDScene {
   int timeStart = 0;
   int timeEnd = 1;
 
-  // Planet , indicatorFactor
-  List<PlanetVm> planets = [];
-
   bool renderInitialized = false;
   bool sizeInitialized = false;
 
@@ -85,7 +82,6 @@ class ThreeDScene extends _$ThreeDScene {
     sizeInitialized = true;
 
     await three3dRender.initialize(options: options);
-
     renderInitialized = true;
 
     // Wait for web  //? centain time?
@@ -97,43 +93,10 @@ class ThreeDScene extends _$ThreeDScene {
   }
 
   initScene() async {
-    initPlanet();
     initRenderer();
     initPage();
     initRotationSensor();
     state = true;
-  }
-
-  initPlanet() {
-    planets.clear();
-    final allPlanetsData = planetsData;
-    //TODO debug use
-    for (var i = 0; i < 1; i++) {
-      // for (var i = 0; i < allPlanetsData.length; i++) {
-      final planetData = allPlanetsData[i];
-      planets.add(PlanetVm(
-          planet: Planet(
-            name: planetData.name,
-            radius: planetData.radius,
-            orbitalRadius: planetData.orbitalRadius,
-            location: Location(
-              planetData.location.x,
-              planetData.location.y,
-              planetData.location.z,
-            ),
-          ),
-          color: planetData.color,
-          indicatorFactor: 1));
-    }
-    //TODO factor 与摄像机朝向有关
-    //debug init
-    for (var i = 0; i < planets.length; i++) {
-      final angle = pi;
-      final orbitalRadius = planets[i].planet.orbitalRadius;
-      planets[i].planet.location =
-          Location(cos(angle) * orbitalRadius, sin(angle) * orbitalRadius, 0);
-    }
-    // debug end
   }
 
   initRotationSensor() {
@@ -250,28 +213,30 @@ class ThreeDScene extends _$ThreeDScene {
         geometry, three.PointsMaterial({"color": 0x888888, "size": 5}));
     scene.add(particles);
 
+    final planets = ref.watch(planetListProvider);
     // add planets
-    // for (var planet in planets) {
-    //   var mesh = three.Mesh(three.SphereGeometry(planet.radius, 16, 8),
-    //       three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
-    //   scene.add(mesh);
-    // }
-    for (var i = 0; i < planets.length; i++) {
-      var planet = planets[i].planet;
-      var color = planets[i].color;
-      var mesh = three.Mesh(
-          three.SphereGeometry(planet.radius, 16, 8),
-          //TODO 外星站是隐身的
-          three.MeshBasicMaterial({
-            "color": color, // texture?
-            "wireframe": false
-          }));
-      mesh.position.x = planet.location.x * 0.5;
-      mesh.position.y = planet.location.y * 0.5;
-      mesh.position.z = planet.location.z * 0.5;
-      mesh.position;
+    for (var planet in planets) {
+      final planetLocation = planet.location;
+      var mesh = three.Mesh(three.SphereGeometry(planet.radius, 16, 8),
+          three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
+      mesh.position.set(planetLocation.x, planetLocation.y, planetLocation.z);
       scene.add(mesh);
     }
+    // for (var i = 0; i < planets.length; i++) {
+    //   var planet = planets[i].planet;
+    //   var mesh = three.Mesh(
+    //       three.SphereGeometry(planet.radius, 16, 8),
+    //       //TODO 外星站是隐身的
+    //       three.MeshBasicMaterial({
+    //         "color": color, // texture?
+    //         "wireframe": false
+    //       }));
+    //   mesh.position.x = planet.location.x * 0.5;
+    //   mesh.position.y = planet.location.y * 0.5;
+    //   mesh.position.z = planet.location.z * 0.5;
+    //   mesh.position;
+    //   scene.add(mesh);
+    // }
   }
 
   render() {

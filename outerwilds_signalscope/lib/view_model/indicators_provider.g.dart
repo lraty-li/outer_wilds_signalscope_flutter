@@ -6,7 +6,7 @@ part of 'indicators_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$indicatorListHash() => r'4084abc48993bf85dc9db188ae8ddece611c0fd6';
+String _$indicatorListHash() => r'0124e469791f64840ac246ad4ad0617c778e1da2';
 
 /// See also [IndicatorList].
 @ProviderFor(IndicatorList)
