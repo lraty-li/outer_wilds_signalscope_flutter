@@ -55,20 +55,16 @@ class HomeState extends Notifier<HomeState> {
   int timeStart = 0;
   int timeEnd = 1;
 
-  // Planet , indicatorFactor
-  List<PlanetVm> planets = [];
-
   bool renderInitialized = false;
 
   @override
-  HomeState build(){
+  HomeState build() {
     return HomeState();
   }
 
   //https://github.com/wasabia/three_dart/blob/main/example/lib/webgl_camera.dart
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState(Size size, double devicePixelRatio) async {
-    
     width = size.width;
     height = size.height;
     dpr = devicePixelRatio;

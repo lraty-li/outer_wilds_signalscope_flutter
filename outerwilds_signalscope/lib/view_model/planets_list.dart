@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/models/location.dart';
@@ -6,14 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'planets_list.g.dart';
 
-class PlanetVm {
-  PlanetVm(
-      {required this.planet, this.indicatorFactor = 0, this.color = 0x4287f5});
-  Planet planet;
-  double indicatorFactor;
-  int color;
-}
-
 @riverpod
 class PlanetList extends _$PlanetList {
   @override
@@ -21,17 +15,26 @@ class PlanetList extends _$PlanetList {
     final allPlanetsData = planetsData;
     List<Planet> planets = [];
     //TODO debug use
+    // for (var i = 0; i < allPlanetsData.length; i++) {
+    //DEBUG
     for (var i = 0; i < 1; i++) {
-      // for (var i = 0; i < allPlanetsData.length; i++) {
       final planetData = allPlanetsData[i];
+      final angle = pi;
+      final orbitalRadius = planetData.orbitalRadius;
+      //DEBUG END
       planets.add(Planet(
         name: planetData.name,
         radius: planetData.radius,
         orbitalRadius: planetData.orbitalRadius,
         location: Location(
-          planetData.location.x,
-          planetData.location.y,
-          planetData.location.z,
+          //DEBUG
+          cos(angle) * orbitalRadius * .4,
+          sin(angle) * orbitalRadius * .4,
+          0,
+          //DEBUG END
+          // planetData.location.x,
+          // planetData.location.y,
+          // planetData.location.z,
         ),
       ));
     }

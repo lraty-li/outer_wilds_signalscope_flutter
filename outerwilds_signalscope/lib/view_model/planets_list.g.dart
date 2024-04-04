@@ -6,7 +6,7 @@ part of 'planets_list.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$planetListHash() => r'3b90d2c3255683e7b13758f1c120a146fc8500e1';
+String _$planetListHash() => r'cf194d0872896a39c272c6ea8b930814792a99fb';
 
 /// See also [PlanetList].
 @ProviderFor(PlanetList)
