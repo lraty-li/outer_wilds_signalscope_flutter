@@ -44,4 +44,11 @@ class PlanetList extends _$PlanetList {
         growable: false);
     return planetsFilled;
   }
+
+  updateAllLocation(double nowTime){
+    for (var i = 0; i < state.length; i++) {
+      final planet = state[i];
+      planet.willGoto(nowTime, planet.location);
+    }
+  }
 }

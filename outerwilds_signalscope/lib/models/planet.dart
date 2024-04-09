@@ -33,8 +33,10 @@ class Planet {
 
   //自身半径
   final double radius;
+
+  List<Planet> children = []; //因为要先更新母星的位置，所以用从上往下的结构存储
   
-  Location willGoto(int time) {
+  Location willGoto(double time, Location parentLocation) {
     //TODO 根据周期，经过time之后到达什么位置, 参数：轨道
     //如何描述轨道？ 外星站是垂直黄道的
     //根据母星计算，那么得先更新母星的位置？
