@@ -1,3 +1,4 @@
-import 'package:three_dart/three_dart.dart';
+import 'dart:math';
 
-const tau = Math.pi * 2;
+const fps = 45;
+const tau = pi * 2;

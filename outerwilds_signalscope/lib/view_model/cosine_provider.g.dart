@@ -1,26 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'indicators_provider.dart';
+part of 'cosine_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$indicatorListHash() => r'6f2fea6cfdd3dd1f8b50ec49dacedabf725c2080';
+String _$cosinePlanetCameraHash() =>
+    r'b1e57d238c9ed3b0374b339dfeecedde87b57bc9';
 
-/// See also [IndicatorList].
-@ProviderFor(IndicatorList)
-final indicatorListProvider =
-    AutoDisposeNotifierProvider<IndicatorList, List<IndicatorData>>.internal(
-  IndicatorList.new,
-  name: r'indicatorListProvider',
+/// See also [cosinePlanetCamera].
+@ProviderFor(cosinePlanetCamera)
+final cosinePlanetCameraProvider =
+    AutoDisposeStreamProvider<List<double>>.internal(
+  cosinePlanetCamera,
+  name: r'cosinePlanetCameraProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$indicatorListHash,
+      : _$cosinePlanetCameraHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$IndicatorList = AutoDisposeNotifier<List<IndicatorData>>;
+typedef CosinePlanetCameraRef = AutoDisposeStreamProviderRef<List<double>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

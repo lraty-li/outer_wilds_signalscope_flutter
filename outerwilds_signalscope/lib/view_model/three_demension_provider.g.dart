@@ -6,7 +6,7 @@ part of 'three_demension_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threeDSceneHash() => r'f96e9557d7b0bd01eb437cf5ba4bd69beecd1855';
+String _$threeDSceneHash() => r'3d67970e1c94028dfbc987058c2a0b406289e070';
 
 /// See also [ThreeDScene].
 @ProviderFor(ThreeDScene)

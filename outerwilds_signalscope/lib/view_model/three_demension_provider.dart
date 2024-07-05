@@ -1,13 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gl/flutter_gl.dart';
-import 'package:outerwilds_signalscope/constant/planets_data.dart';
-import 'package:outerwilds_signalscope/models/location.dart';
-import 'package:outerwilds_signalscope/models/planet.dart';
 import 'package:outerwilds_signalscope/view_model/planets_list.dart';
-import 'package:outerwilds_signalscope/view_model/sensor_provider.dart';
+import 'package:outerwilds_signalscope/view_model/device_rotation_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three_dart.dart' as three;
 part 'three_demension_provider.g.dart';
@@ -100,7 +95,7 @@ class ThreeDScene extends _$ThreeDScene {
   }
 
   initRotationSensor() {
-    ref.listen(rotationProvider, (previous, next) {
+    ref.listen(deviceRotationProvider, (previous, next) {
       next.when(
         loading: () {},
         error: (error, stack) {},
