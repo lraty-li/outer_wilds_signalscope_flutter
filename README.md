@@ -5,5 +5,6 @@ a flutter app to imitate signalscope of game outer wilds
 http://42.193.169.218:9000/project/outerwilds_signalscope/kanban
 
 ## preview
-<video controls src="doc/Recording_2024-07-05-19-35-11.mp4" title="preview" height=400></video>
+
+https://github.com/lraty-li/outer_wilds_signalscope_flutter/assets/46740834/101c77b2-108f-4f6f-a01f-fd3e2ed6a1ff
 
