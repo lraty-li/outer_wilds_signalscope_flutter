@@ -152,9 +152,9 @@ class ThreeDScene extends _$ThreeDScene {
     //
 
     camera = three.PerspectiveCamera(50, aspect, 1, 25000);
-    camera.position.x = 500;
-    camera.position.y = 500;
-    camera.position.z = 500;
+    camera.position.x = 1500;
+    camera.position.y = 1500;
+    camera.position.z = 1500;
     camera.lookAt(three.Vector3(0, 0, 0));
 
     cameraPerspective = three.PerspectiveCamera(50, aspect, 1, 25000);
@@ -173,24 +173,6 @@ class ThreeDScene extends _$ThreeDScene {
     // cameraRig.add(cameraPerspective);
 
     // scene.add(cameraRig);
-
-    //
-
-    var mesh2 = three.Mesh(three.SphereGeometry(150, 16, 8),
-        three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
-    mesh2.position.y = 250;
-    mesh2.position.x = 250;
-    mesh2.position.z = 0;
-
-    var mesh3 = three.Mesh(three.SphereGeometry(100, 16, 8),
-        three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
-    mesh3.position.y = -250;
-    mesh3.position.x = -250;
-    mesh3.position.z = 0;
-    // scene.add(mesh2);
-    // scene.add(mesh3);
-
-    //
 
     var geometry = three.BufferGeometry();
     List<double> vertices = [];
@@ -213,25 +195,10 @@ class ThreeDScene extends _$ThreeDScene {
     for (var planet in planets) {
       final planetLocation = planet.location;
       var mesh = three.Mesh(three.SphereGeometry(planet.radius, 16, 8),
-          three.MeshBasicMaterial({"color": 0x00ff00, "wireframe": false}));
+          three.MeshBasicMaterial({"color": planet.color, "wireframe": false}));
       mesh.position.set(planetLocation.x, planetLocation.y, planetLocation.z);
       scene.add(mesh);
     }
-    // for (var i = 0; i < planets.length; i++) {
-    //   var planet = planets[i].planet;
-    //   var mesh = three.Mesh(
-    //       three.SphereGeometry(planet.radius, 16, 8),
-    //       //TODO 外星站是隐身的
-    //       three.MeshBasicMaterial({
-    //         "color": color, // texture?
-    //         "wireframe": false
-    //       }));
-    //   mesh.position.x = planet.location.x * 0.5;
-    //   mesh.position.y = planet.location.y * 0.5;
-    //   mesh.position.z = planet.location.z * 0.5;
-    //   mesh.position;
-    //   scene.add(mesh);
-    // }
   }
 
   render() {

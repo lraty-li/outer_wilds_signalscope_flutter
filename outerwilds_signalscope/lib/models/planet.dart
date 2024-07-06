@@ -1,9 +1,8 @@
 import 'package:outerwilds_signalscope/models/location.dart';
-import 'package:outerwilds_signalscope/util/calc_period.dart';
 
 class Planet {
   Planet({
-    // required this.color,
+    required this.color,
     required this.location,
     required this.name,
     required this.orbitalRadius,
@@ -16,15 +15,15 @@ class Planet {
     //     radius: 2001.75,
     //     orbitalRadius: 0,
     //     location: Location(0, 0, 0));
-    // periodSeconds = calcPeriod(orbitalRadius); 
+    // periodSeconds = calcPeriod(orbitalRadius);
     //？ 卫星的周期也是这么算的？
   }
-  // final int color;
+  final int color;
   final String name;
   Location location;
-  
+
   late final double periodSeconds;
-  
+
   //环绕母星的半径
   final double orbitalRadius;
 
@@ -33,7 +32,7 @@ class Planet {
 
   //自身半径
   final double radius;
-  
+
   Location willGoto(int time) {
     //TODO 根据周期，经过time之后到达什么位置, 参数：轨道
     //如何描述轨道？ 外星站是垂直黄道的
@@ -54,7 +53,6 @@ class Planet {
   }
 }
 
-
-enum PlanetEnum{
+enum PlanetEnum {
   TimberHearth,
 }

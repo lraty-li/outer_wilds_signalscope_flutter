@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+
 final List<
     ({
       String name,
       double radius,
       double orbitalRadius,
-      int color,
+      MaterialColor color,
       ({double x, double y, double z}) location
     })> planetsData = [
   // name ;
@@ -14,7 +16,7 @@ final List<
     name: "Timber Hearth",
     radius: 254,
     orbitalRadius: 8593.085981,
-    color: 0x846850,
+    color: Colors.green,
     location: (x: 0, y: 0, z: 0)
   ),
   (
@@ -22,28 +24,28 @@ final List<
     name: "Ember Twins",
     radius: 170,
     orbitalRadius: 5000,
-    color: 0xD84D20,
+    color: Colors.red,
     location: (x: 0, y: 0, z: 0)
-  ), 
+  ),
   (
     name: "Brittle Hollow",
     radius: 272,
     orbitalRadius: 11690.89092,
-    color: 0x756B96,
+    color: Colors.purple,
     location: (x: 0, y: 0, z: 0)
   ),
   (
     name: "Dart Bramble",
     radius: 203.3,
     orbitalRadius: 20000,
-    color: 0x4D211E,
+    color: Colors.amber,
     location: (x: 0, y: 0, z: 0)
   ),
   (
     name: "Giant's deep",
     radius: 500,
     orbitalRadius: 16457.58738,
-    color: 0x19B9B1,
+    color: Colors.blue,
     location: (x: 0, y: 0, z: 0)
   ),
   // (

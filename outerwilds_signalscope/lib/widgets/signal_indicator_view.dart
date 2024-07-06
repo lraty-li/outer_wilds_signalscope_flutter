@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:outerwilds_signalscope/view_model/indicators_provider.dart';
-import 'package:outerwilds_signalscope/view_model/three_demension_provider.dart';
 import 'package:outerwilds_signalscope/widgets/circle_indicator.dart';
 
 class SignalIndicatorView extends ConsumerWidget {
@@ -20,7 +19,7 @@ class SignalIndicatorView extends ConsumerWidget {
       var indicatorWidget = SignalCircleIndicator(
         arcCtlFactor: indicatorData.factor,
         arcLengthFactor: .2,
-        arcColor: Colors.red,
+        arcColor: Colors.white54,
         // arcColor: Color(planets[i].color),
       );
       indicators.add(indicatorWidget);
