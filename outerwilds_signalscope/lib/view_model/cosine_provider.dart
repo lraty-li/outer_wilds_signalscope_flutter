@@ -35,7 +35,6 @@ Stream<List<double>> cosinePlanetCamera(CosinePlanetCameraRef ref) async* {
         (cameraDirection.length() * tempVector3.length());
     cosineValues.add(cosine);
   }
-  print('aaa${cosineValues}');
   yield cosineValues;
   // final deviceRotation = ref.watch(deviceRotationProvider);
 }

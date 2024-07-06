@@ -1,8 +1,5 @@
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/view_model/cosine_provider.dart';
-import 'package:outerwilds_signalscope/view_model/planets_list.dart';
-import 'package:outerwilds_signalscope/view_model/device_rotation_provider.dart';
-import 'package:outerwilds_signalscope/view_model/three_demension_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three3d/math/vector3.dart';
 
