@@ -3,6 +3,7 @@ import 'package:outerwilds_signalscope/models/location.dart';
 class Planet {
   Planet({
     required this.color,
+    required this.id,
     required this.location,
     required this.name,
     required this.orbitalRadius,
@@ -19,6 +20,7 @@ class Planet {
     //？ 卫星的周期也是这么算的？
   }
   final int color;
+  final int id;
   final String name;
   Location location;
 

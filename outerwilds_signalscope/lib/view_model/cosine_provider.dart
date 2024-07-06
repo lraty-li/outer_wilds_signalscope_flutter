@@ -8,7 +8,7 @@ import 'package:three_dart/three_dart.dart' as three;
 part 'cosine_provider.g.dart';
 
 @riverpod
-Stream<List<double>> cosinePlanetCamera(CosinePlanetCameraRef ref) async* {
+Stream<Map<int, double>> cosinePlanetCamera(CosinePlanetCameraRef ref) async* {
 //Only used to calculate direction
   final cameraPerspective = three.PerspectiveCamera();
   final scene = three.Scene();
@@ -19,7 +19,7 @@ Stream<List<double>> cosinePlanetCamera(CosinePlanetCameraRef ref) async* {
   var quaternion = three.Quaternion();
 
   final planets = ref.watch(planetListProvider);
-  final List<double> cosineValues = [];
+  final Map<int, double> cosineValues = {};
 
   final deviceRotation = ref.watch(deviceRotationProvider.future);
   var rotationVector = await deviceRotation;
@@ -33,7 +33,7 @@ Stream<List<double>> cosinePlanetCamera(CosinePlanetCameraRef ref) async* {
     tempVector3.set(planet.location.x, planet.location.y, planet.location.z);
     var cosine = cameraDirection.dot(tempVector3) /
         (cameraDirection.length() * tempVector3.length());
-    cosineValues.add(cosine);
+    cosineValues[planet.id] = cosine;
   }
   yield cosineValues;
   // final deviceRotation = ref.watch(deviceRotationProvider);

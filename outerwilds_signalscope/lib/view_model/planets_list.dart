@@ -20,6 +20,7 @@ class PlanetList extends _$PlanetList {
       final orbitalRadius = planetData.orbitalRadius;
       planets.add(Planet(
         color: planetData.color.value,
+        id: i,
         name: planetData.name,
         radius: planetData.radius,
         orbitalRadius: planetData.orbitalRadius,
