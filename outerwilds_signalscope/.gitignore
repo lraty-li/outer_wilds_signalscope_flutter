@@ -45,3 +45,9 @@ app.*.map.json
 
 #no ios devices
 ios
+
+#music 
+assets/music
+
+# riverpod generate
+**/*.g.dart

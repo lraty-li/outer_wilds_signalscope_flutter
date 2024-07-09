@@ -16,7 +16,6 @@ class IndicatorData {
 class IndicatorList extends _$IndicatorList {
   @override
   List<IndicatorData> build() {
-    print("IndicatorList build");
     ref.onDispose(() => print("IndicatorList dispose"));
     _initSensor();
     return List<IndicatorData>.filled(
@@ -25,7 +24,7 @@ class IndicatorList extends _$IndicatorList {
 
   _initSensor() {
     ref.listen(cosinePlanetCameraProvider, (previous, next) {
-      next.whenData((cosinValues) => update(cosinValues));
+      next.whenData((cosinValues) => updateData(cosinValues));
     });
   }
 
@@ -33,7 +32,7 @@ class IndicatorList extends _$IndicatorList {
   var tempVector3 = Vector3();
 
   //TODO 加速计，摄像机平移？够不够准确呢
-  void update(Map<int, double> cosinValues) {
+  void updateData(Map<int, double> cosinValues) {
     final planets = ref.watch(planetListProvider);
     List<IndicatorData> tempData = [];
     for (var i = 0; i < planets.length; i++) {

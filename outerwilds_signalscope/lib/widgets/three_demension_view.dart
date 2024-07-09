@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:outerwilds_signalscope/view_model/music_provider.dart';
 import 'package:outerwilds_signalscope/view_model/three_demension_provider.dart';
 
 class ThreeDView extends ConsumerWidget {
@@ -7,6 +8,9 @@ class ThreeDView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //TODO 单独创建一个view？或者往上放到main 的 init之类的
+    final musicProvider = ref.watch(musicPlayerProvider);
+
     print("3d view build");
     _initSize(context, ref);
     //TODO not good, threeDSceneReady is the actual notifier

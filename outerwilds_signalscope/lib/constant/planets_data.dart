@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 final List<
     ({
+      int id,
       String name,
       double radius,
       double orbitalRadius,
@@ -13,6 +14,7 @@ final List<
   // Orbital radius to sun (m);
   // inital location
   (
+    id: 1,
     name: "Timber Hearth",
     radius: 254,
     orbitalRadius: 8593.085981,
@@ -21,6 +23,7 @@ final List<
   ),
   (
     // The center of ET/AT
+    id: 2,
     name: "Ember Twins",
     radius: 170,
     orbitalRadius: 5000,
@@ -28,6 +31,7 @@ final List<
     location: (x: 0, y: 0, z: 0)
   ),
   (
+    id: 3,
     name: "Brittle Hollow",
     radius: 272,
     orbitalRadius: 11690.89092,
@@ -35,6 +39,7 @@ final List<
     location: (x: 0, y: 0, z: 0)
   ),
   (
+    id: 4,
     name: "Dart Bramble",
     radius: 203.3,
     orbitalRadius: 20000,
@@ -42,6 +47,7 @@ final List<
     location: (x: 0, y: 0, z: 0)
   ),
   (
+    id: 5,
     name: "Giant's deep",
     radius: 500,
     orbitalRadius: 16457.58738,
@@ -95,3 +101,13 @@ final List<
     location: (x: 0, y: 0, z: 0)
   ),
 ];
+
+const _musicAssetRoot = "assets/music/";
+//TODO No space bar allowed? 怎么安装进系统之后，文件名前面空格的部分都没了， "ab c.mp3" ->"c.mp3"
+final Map<int, String> planetMusicMap = {
+  1: "Timber_Hearth-whistling.solo.mp3",
+  2: "Ember_Twins-drums.solo.mp3",
+  3: "Brittle_Hollow-banjo.solo.mp3",
+  4: "Dart_Dramble-harmonica.solo.mp3",
+  5: "Giant's_deep-flute.solo.mp3",
+}.map((key, value) => MapEntry(key, _musicAssetRoot + value));
