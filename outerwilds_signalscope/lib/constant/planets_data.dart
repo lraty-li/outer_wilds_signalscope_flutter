@@ -1,9 +1,12 @@
+import 'package:flutter/material.dart';
+
 final List<
     ({
+      int id,
       String name,
       double radius,
       double orbitalRadius,
-      int color,
+      MaterialColor color,
       ({double x, double y, double z}) location
     })> planetsData = [
   // name ;
@@ -11,39 +14,44 @@ final List<
   // Orbital radius to sun (m);
   // inital location
   (
+    id: 1,
     name: "Timber Hearth",
     radius: 254,
     orbitalRadius: 8593.085981,
-    color: 0x846850,
+    color: Colors.green,
     location: (x: 0, y: 0, z: 0)
   ),
   (
     // The center of ET/AT
+    id: 2,
     name: "Ember Twins",
     radius: 170,
     orbitalRadius: 5000,
-    color: 0xD84D20,
+    color: Colors.red,
     location: (x: 0, y: 0, z: 0)
-  ), 
+  ),
   (
+    id: 3,
     name: "Brittle Hollow",
     radius: 272,
     orbitalRadius: 11690.89092,
-    color: 0x756B96,
+    color: Colors.purple,
     location: (x: 0, y: 0, z: 0)
   ),
   (
+    id: 4,
     name: "Dart Bramble",
     radius: 203.3,
     orbitalRadius: 20000,
-    color: 0x4D211E,
+    color: Colors.amber,
     location: (x: 0, y: 0, z: 0)
   ),
   (
+    id: 5,
     name: "Giant's deep",
     radius: 500,
     orbitalRadius: 16457.58738,
-    color: 0x19B9B1,
+    color: Colors.blue,
     location: (x: 0, y: 0, z: 0)
   ),
   // (
@@ -93,3 +101,13 @@ final List<
     location: (x: 0, y: 0, z: 0)
   ),
 ];
+
+const _musicAssetRoot = "assets/music/";
+//TODO No space bar allowed? 怎么安装进系统之后，文件名前面空格的部分都没了， "ab c.mp3" ->"c.mp3"
+final Map<int, String> planetMusicMap = {
+  1: "Timber_Hearth-whistling.solo.mp3",
+  2: "Ember_Twins-drums.solo.mp3",
+  3: "Brittle_Hollow-banjo.solo.mp3",
+  4: "Dart_Dramble-harmonica.solo.mp3",
+  5: "Giant's_deep-flute.solo.mp3",
+}.map((key, value) => MapEntry(key, _musicAssetRoot + value));

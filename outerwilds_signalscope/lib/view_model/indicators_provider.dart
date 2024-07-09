@@ -1,8 +1,6 @@
 import 'package:outerwilds_signalscope/constant/planets_data.dart';
 import 'package:outerwilds_signalscope/view_model/cosine_provider.dart';
 import 'package:outerwilds_signalscope/view_model/planets_list.dart';
-import 'package:outerwilds_signalscope/view_model/device_rotation_provider.dart';
-import 'package:outerwilds_signalscope/view_model/three_demension_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:three_dart/three3d/math/vector3.dart';
 
@@ -18,7 +16,6 @@ class IndicatorData {
 class IndicatorList extends _$IndicatorList {
   @override
   List<IndicatorData> build() {
-    print("IndicatorList build");
     ref.onDispose(() => print("IndicatorList dispose"));
     _initSensor();
     return List<IndicatorData>.filled(
@@ -27,7 +24,7 @@ class IndicatorList extends _$IndicatorList {
 
   _initSensor() {
     ref.listen(cosinePlanetCameraProvider, (previous, next) {
-      next.whenData((cosinValues) => update(cosinValues));
+      next.whenData((cosinValues) => updateData(cosinValues));
     });
   }
 
@@ -35,11 +32,12 @@ class IndicatorList extends _$IndicatorList {
   var tempVector3 = Vector3();
 
   //TODO 加速计，摄像机平移？够不够准确呢
-  void update(List<double> cosinValues) {
+  void updateData(Map<int, double> cosinValues) {
+    final planets = ref.watch(planetListProvider);
     List<IndicatorData> tempData = [];
-    for (var i = 0; i < cosinValues.length; i++) {
+    for (var i = 0; i < planets.length; i++) {
       //在180度内
-      double cosine = cosinValues[i];
+      double cosine = cosinValues[planets[i].id] ?? -1;
       if (cosine > 0) {
         tempData.add(IndicatorData(factor: cosine));
       }

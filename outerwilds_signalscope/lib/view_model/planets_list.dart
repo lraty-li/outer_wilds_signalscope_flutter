@@ -14,22 +14,20 @@ class PlanetList extends _$PlanetList {
   List<Planet> build() {
     final allPlanetsData = planetsData;
     List<Planet> planets = [];
-    //TODO debug use
-    // for (var i = 0; i < allPlanetsData.length; i++) {
-    //DEBUG
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < allPlanetsData.length; i++) {
       final planetData = allPlanetsData[i];
-      final angle = pi;
+      final angle = Random().nextDouble() * pi * (Random().nextBool() ? 1 : -1);
       final orbitalRadius = planetData.orbitalRadius;
-      //DEBUG END
       planets.add(Planet(
+        color: planetData.color.value,
+        id: planetData.id,
         name: planetData.name,
         radius: planetData.radius,
         orbitalRadius: planetData.orbitalRadius,
         location: Location(
           //DEBUG
-          cos(angle) * orbitalRadius * .4,
-          sin(angle) * orbitalRadius * .4,
+          cos(angle) * orbitalRadius * .2,
+          sin(angle) * orbitalRadius * .2,
           0,
           //DEBUG END
           // planetData.location.x,
